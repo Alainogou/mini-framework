@@ -43,35 +43,170 @@ class MiniFramework {
  }
 
  // Fonction de rendu simple
- render(component, container) {
-    container.innerHTML = component();
- }
+//  render(component, container) {
+//     container.innerHTML = component();
+//  }
+
+   render(component, container) {
+      container.innerHTML = renderDOM(component);
+   }
+   // render(component, container) {
+   //   /// Supposons que component retourne un objet représentant le DOM
+   //    container.innerHTML = renderDOM(component);
+   // }
 }
 
 // Exemple d'utilisation
 const app = new MiniFramework();
 
 // Définition des routes
+
+// console.log(document.getElementById('app'))
+// app.route('/', () => {
+//  app.render(() => `
+//     <h1>Home</h1>
+//     <button onclick="app.navigate('/todos')">Go to Todos</button>
+//  `, document.getElementById('app'));
+// });
+
+// app.route('/todos', () => {
+//  app.render(() => `
+//     <h1>Todos</h1>
+//     <button onclick="app.navigate('/')">Go Home</button>
+//  `, document.getElementById('app'));
+// });
+
+// // Gestion de l'état
+// app.setState('user', { name: 'John Doe' });
+// console.log(app.getState('user'));
+
+// // Gestion des événements
+// app.on('stateChanged', (data) => console.log(`State changed: ${data.key} = ${data.value}`));
+
+// // Navigation initiale
+let num=30
+const html = `
+
+   <form action="/submit" method="post">
+  
+   <label for="name">Nom:</label><br>
+   <input type="text" id="name" name="name" required><br>
+   <label for="email">Adresse e-mail:</label><br>
+   <input type="email" id="email" name="email" required><br>
+   <input type="submit" value="Soumettre">
+   </form>
+   <h2>Hello word <h2/>
+  
+`;
+
+const virtualDOM = htmlToVirtualDOM(html);
+
+
 app.route('/', () => {
- app.render(() => `
-    <h1>Home</h1>
-    <button onclick="app.navigate('/todos')">Go to Todos</button>
- `, document.getElementById('app'));
+    app.render(htmlToVirtualDOM(html), document.getElementById('app'));
+
+//     app.render({
+//       tag: 'div',
+//       attrs: { class: 'nameSubm' },
+//       children: [
+//           { tag: 'input', attrs: { type: 'text', placeholder: 'Insert Name' } },
+//           { tag: 'input', attrs: { type: 'submit', placeholder: 'Submit' } }
+//       ]
+//   }, document.getElementById('app'));
 });
 
-app.route('/todos', () => {
- app.render(() => `
-    <h1>Todos</h1>
-    <button onclick="app.navigate('/')">Go Home</button>
- `, document.getElementById('app'));
-});
 
-// Gestion de l'état
-app.setState('user', { name: 'John Doe' });
-console.log(app.getState('user'));
 
-// Gestion des événements
-app.on('stateChanged', (data) => console.log(`State changed: ${data.key} = ${data.value}`));
+// function renderDOM(domObject) {
+//    let html = `<${domObject.tag}`;
 
-// Navigation initiale
-app.navigate('/');
+//    // Ajout des attributs
+//    for (const attr in domObject.attrs) {
+//        html += ` ${attr}="${domObject.attrs[attr]}"`; // Ajout d'un espace avant chaque attribut
+//    }
+
+//    html += '>';
+
+//    // Ajout des enfants
+//    if (domObject.children) {
+//        domObject.children.forEach(child => {
+//            html += renderDOM(child);
+//        });
+//    }
+
+//    html += `</${domObject.tag}>`;
+//    return html;
+// }
+
+app.navigate('/'); 
+
+function htmlToVirtualDOM(html) {
+   const parser = new DOMParser();
+   const doc = parser.parseFromString(html, 'text/html');
+   console.log(doc.body, "c'est doc")
+   return elementToObject(doc.body);
+}
+
+
+function elementToObject(element) {
+   const obj = {
+       tag: element.tagName.toLowerCase(),
+       attrs: {},
+       children: []
+   };
+
+   // Ajout des attributs
+   for (let i = 0; i < element.attributes.length; i++) {
+       const attr = element.attributes[i];
+       obj.attrs[attr.name] = attr.value;
+   }
+
+   // Ajout des enfants
+   for (let i = 0; i < element.childNodes.length; i++) {
+       const child = element.childNodes[i];
+       if (child.nodeType === Node.TEXT_NODE && child.textContent.trim() !== '') {
+           // Traitement du contenu textuel
+           obj.children.push(child.textContent.trim());
+       } else if (child.nodeType === Node.ELEMENT_NODE) {
+           obj.children.push(elementToObject(child));
+       }
+   }
+
+   return obj;
+}
+
+function renderDOM(domObject) {
+   let html = `<${domObject.tag}`;
+
+   // Ajout des attributs
+   for (const attr in domObject.attrs) {
+       html += ` ${attr}="${domObject.attrs[attr]}"`;
+   }
+
+   html += '>';
+
+   // Ajout des enfants et du textContent
+   domObject.children.forEach(child => {
+       if (typeof child === 'string') {
+           // Traitement du contenu textuel
+           html += child;
+       } else {
+           html += renderDOM(child);
+       }
+   });
+
+   html += `</${domObject.tag}>`;
+   return html;
+}
+
+
+
+// const html = `
+//    <div class="nameSubm">
+//       <input type="text" placeholder="Insert Name" />
+//       <input type="submit" placeholder="Submit" />
+//    </div>
+// `;
+
+// const virtualDOM = htmlToVirtualDOM(html);
+console.log(virtualDOM);
