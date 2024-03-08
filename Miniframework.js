@@ -43,9 +43,9 @@ class MiniFramework {
  }
 
  // Fonction de rendu simple
-//  render(component, container) {
-//     container.innerHTML = component();
-//  }
+ renders(component, container) {
+    container.innerHTML = component;
+ }
 
    render(component, container) {
       container.innerHTML = renderDOM(component);
@@ -55,6 +55,7 @@ class MiniFramework {
    //    container.innerHTML = renderDOM(component);
    // }
 }
+
 
 // Exemple d'utilisation
 const app = new MiniFramework();
@@ -87,15 +88,38 @@ const app = new MiniFramework();
 let num=30
 const html = `
 
-   <form action="/submit" method="post">
-  
-   <label for="name">Nom:</label><br>
-   <input type="text" id="name" name="name" required><br>
-   <label for="email">Adresse e-mail:</label><br>
-   <input type="email" id="email" name="email" required><br>
-   <input type="submit" value="Soumettre">
-   </form>
-   <h2>Hello word <h2/>
+   <section class="todoapp" id="root">
+      <header class="header" >
+         <h1>todos</h1>
+         <div class="input-container">
+            <input class="new-todo" id="todo-input" type="text" data-testid="text-input" placeholder="What needs to be done?" value="">
+            <label class="visually-hidden" for="todo-input">New Todo Input</label>
+         </div>
+      </header>
+      <main class="main" data-testid="main">
+         <div class="toggle-all-container">
+            <input class="toggle-all" type="checkbox" data-testid="toggle-all">
+            <label class="toggle-all-label" for="toggle-all">Toggle All Input</label>
+         </div>
+         <ul class="todo-list" data-testid="todo-list">
+            <li class="" data-testid="todo-item">
+               <div class="view"><input class="toggle" type="checkbox" data-testid="todo-item-toggle">
+               <label data-testid="todo-item-label">ee</label>
+               <button class="destroy" data-testid="todo-item-button"></button>
+               </div>
+            </li>
+         </ul>
+      </main>
+      <footer class="footer" data-testid="footer">
+         <span class="todo-count">1 item left!</span>
+         <ul class="filters" data-testid="footer-navigation">
+            <li><a class="selected" href="#/">All</a></li>
+            <button onclick="app.navigate('/active')">Go to Todos</button>
+            <li><a class="" href="#/completed">Completed</a></li>
+         </ul>
+         <button class="clear-completed" disabled="">Clear completed</button>
+      </footer>
+   </section>
   
 `;
 
@@ -115,6 +139,21 @@ app.route('/', () => {
 //   }, document.getElementById('app'));
 });
 
+app.route('/active', () => {
+   app.renders(
+      ` <button onclick="app.navigate('/')">completed</button>
+      `, 
+      document.getElementById('app'));
+
+//     app.render({
+//       tag: 'div',
+//       attrs: { class: 'nameSubm' },
+//       children: [
+//           { tag: 'input', attrs: { type: 'text', placeholder: 'Insert Name' } },
+//           { tag: 'input', attrs: { type: 'submit', placeholder: 'Submit' } }
+//       ]
+//   }, document.getElementById('app'));
+});
 
 
 // function renderDOM(domObject) {
