@@ -82,6 +82,9 @@ export default class TodoMvc extends MiniFramework {
     }
 }
 
+const todoApp = new TodoMvc();
+    
+
  // <div class="toggle-all-container">
                     //     <input class="toggle-all" type="checkbox" data-testid="toggle-all">
                     //     <label class="toggle-all-label" for="toggle-all">Toggle All Input</label>

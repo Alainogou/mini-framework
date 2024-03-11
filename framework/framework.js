@@ -11,6 +11,7 @@ export default class MiniFramework {
     }
    
     navigate(path) {
+      console.log(path)
        const callback = this.routes[path];
        if (callback) {
          callback();
@@ -47,9 +48,9 @@ export default class MiniFramework {
        container.innerHTML = component;
     }
    
-      render(component, container) {
-         container.innerHTML = renderDOM(component);
-      }
+   render(component, container) {
+      container.innerHTML = renderDOM(component);
+   }
       // render(component, container) {
       //   /// Supposons que component retourne un objet représentant le DOM
       //    container.innerHTML = renderDOM(component);
