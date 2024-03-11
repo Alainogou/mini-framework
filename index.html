@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Framework Example</title>
+    <title>Todo app</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div id="app" ></div>
-   
-    <script src="Miniframework.js"></script>
-    <!-- <script src="cons.js"></script> -->
+    <div id="app"></div>
+    <script type="module">
+        import TodoMvc from "./todoMvc/index.js"
+        document.addEventListener("DOMContentLoaded", () => {
+        const todoApp = new TodoMvc();
+    });
+    </script>
 </body>
 </html>

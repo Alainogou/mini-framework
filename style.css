@@ -1,0 +1,143 @@
+/* Réinitialisation des styles par défaut */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.todoapp {
+    min-width: 550px;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px 0px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(241, 237, 237, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+
+/* Styles pour le header */
+.header {
+    padding: 10px 20px;
+    border-bottom: 1px solid #e6e6e6;
+   
+}
+
+.header h1 {
+    font-size: 24px;
+    color: #777;
+}
+
+/* Styles pour le conteneur d'input */
+.input-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.new-todo {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
+/* Styles pour le conteneur de basculement */
+.toggle-all-container {
+  
+    margin: 20px 0;
+}
+
+.toggle-all {
+    margin: 0 10px;
+}
+
+/* Styles pour la liste des tâches */
+.todo-list {
+    list-style: none;
+    padding: 0;
+}
+
+.todo-item {
+    position: relative;
+    padding: 10px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.todo-item:last-child {
+    border-bottom: none;
+}
+
+/* Styles pour les boutons et les labels */
+.toggle, .destroy {
+    margin: 0 10px;
+}
+
+.toggle {
+    cursor: pointer;
+}
+
+.destroy {
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #ff6060;
+    font-size: 20px;
+}
+
+/* Styles pour le pied de page */
+.footer {
+    padding: 10px 20px;
+    border-top: 1px solid #e6e6e6;
+}
+
+.todo-count {
+    float: left;
+    text-align: left;
+}
+
+.filters {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.filters li {
+    margin: 0 10px;
+}
+
+.filters li a {
+    color: #777;
+    text-decoration: none;
+}
+
+.filters li a.selected {
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.clear-completed {
+    float: right;
+    background: none;
+    border: none;
+    color: #2c3e50;
+    font-size: 14px;
+    cursor: pointer;
+}
