@@ -11,4 +11,4 @@ class State {
     getState() {
        return this.state;
     }
-   }
+}

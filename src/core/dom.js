@@ -12,4 +12,4 @@ class DOM {
        });
        return element;
     }
-   }
+}

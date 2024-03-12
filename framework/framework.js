@@ -9,9 +9,41 @@ export default class MiniFramework {
     route(path, callback) {
        this.routes[path] = callback;
     }
+
+   createElement(domObject) {
+      
+      let html = `<${domObject.tag}`;
    
+      // Ajout des attributs
+      if (domObject.attrs)
+      for (const attr in domObject.attrs) {
+          html += ` ${attr}="${domObject.attrs[attr]}"`;
+      }
+   
+      html += '>';
+   
+      // Ajout des enfants et du textContent
+      if ( domObject.children)
+      domObject.children.forEach(child => {
+          if (typeof child === 'string') {
+              // Traitement du contenu textuel
+              html += child;
+          } else {
+              html += this.createElement(child);
+          }
+      });
+   
+      html += `</${domObject.tag}>`;
+      
+      return html;
+   }
+   
+    // Fonction de rendu simple
+   render(component, container) {
+      container.innerHTML = component;
+   }
+
     navigate(path) {
-      console.log(path)
        const callback = this.routes[path];
        if (callback) {
          callback();
@@ -29,11 +61,12 @@ export default class MiniFramework {
     }
    
     // Gestion des événements
-    on(eventName, callback) {
-       if (!this.eventListeners[eventName]) {
-         this.eventListeners[eventName] = [];
+    eventListener(element, eventName,  callback) {
+       if (element && eventName) {
+         element.addEventListener(eventName, callback )
+         
        }
-       this.eventListeners[eventName].push(callback);
+      // this.eventListeners[eventName].push(callback); 
     }
    
     emit(eventName, data) {
@@ -43,44 +76,68 @@ export default class MiniFramework {
        }
     }
    
-    // Fonction de rendu simple
-    renders(component, container) {
-       container.innerHTML = component;
-    }
    
-   render(component, container) {
-      container.innerHTML = renderDOM(component);
-   }
-      // render(component, container) {
-      //   /// Supposons que component retourne un objet représentant le DOM
-      //    container.innerHTML = renderDOM(component);
-      // }
+   
+   
+   
 }
    
    
    
-   function renderDOM(domObject) {
-      let html = `<${domObject.tag}`;
+// function renderDOM(domObject) {
+//       let html = `<${domObject.tag}`;
    
-      // Ajout des attributs
-      for (const attr in domObject.attrs) {
-          html += ` ${attr}="${domObject.attrs[attr]}"`;
-      }
+//       // Ajout des attributs
+//       for (const attr in domObject.attrs) {
+//           html += ` ${attr}="${domObject.attrs[attr]}"`;
+//       }
    
-      html += '>';
+//       html += '>';
    
-      // Ajout des enfants et du textContent
-      domObject.children.forEach(child => {
-          if (typeof child === 'string') {
-              // Traitement du contenu textuel
-              html += child;
-          } else {
-              html += renderDOM(child);
-          }
-      });
+//       // Ajout des enfants et du textContent
+//       domObject.children.forEach(child => {
+//           if (typeof child === 'string') {
+//               // Traitement du contenu textuel
+//               html += child;
+//           } else {
+//               html += renderDOM(child);
+//           }
+//       });
    
-      html += `</${domObject.tag}>`;
-      return html;
-   }
+//       html += `</${domObject.tag}>`;
+//       return html;
+// }
    
-   ;
+
+
+// function htmlToVirtualDOM(html) {
+//    const parser = new DOMParser();
+//    const doc = parser.parseFromString(html, 'text/html');
+//    console.log(doc.body, "c'est doc")
+//    return elementToObject(doc.body);
+// }
+
+// function elementToObject(element) {
+//    const obj = {
+//        tag: element.tagName.toLowerCase(),
+//        attrs: {},
+//        children: []
+//    };
+
+//    for (let i = 0; i < element.attributes.length; i++) {
+//        const attr = element.attributes[i];
+//        obj.attrs[attr.name] = attr.value;
+//    }
+
+//    for (let i = 0; i < element.childNodes.length; i++) {
+//        const child = element.childNodes[i];
+//        if (child.nodeType === Node.TEXT_NODE && child.textContent.trim() !== '') {
+//            // Traitement du contenu textuel
+//            obj.children.push(child.textContent.trim());
+//        } else if (child.nodeType === Node.ELEMENT_NODE) {
+//            obj.children.push(elementToObject(child));
+//        }
+//    }
+
+//    return obj;
+// }

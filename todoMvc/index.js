@@ -4,7 +4,9 @@ import MiniFramework from "../framework/framework.js";
 export default class TodoMvc extends MiniFramework {
     constructor() {
         super();
-        this.num = 30; // Utilisez this pour définir les propriétés de classe
+              
+
+       
         this.html = `
             <section class="todoapp" >
                 <header class="header" >
@@ -28,58 +30,93 @@ export default class TodoMvc extends MiniFramework {
                 </footer>
             </section>
         `;
-        this.virtualDOM = this.htmlToVirtualDOM(this.html);
 
+        
+        // this.virtualDOM = this.htmlToVirtualDOM(this.html);
+    this.vmobject={
+        "tag": "div",
+        "attrs": {},
+        "children": [
+          {
+            "tag": "div",
+            "attrs": {
+              "class": "nameSubm"
+            },
+            "children": [
+              {
+                "tag": "input",
+                "attrs": {
+                  "type": "text",
+                  "placeholder": "Insert Name"
+                }
+              },
+              {
+                "tag": "input",
+                "attrs": {
+                  "type": "submit",
+                  "placeholder": "Submit"
+                }
+              }
+            ]
+          },
+
+          {
+            tag: 'button',
+            attrs: {
+                id: 'completetion'
+            },
+            children: [
+                'call me'
+            ]
+          }
+
+        ]
+      }
+
+
+      
+      
+       this.element=this.createElement(this.vmobject)
         // Définition des routes
         console.log("this.routes", window.location.href)
         this.route('/', () => {
-            this.render(this.virtualDOM, document.getElementById('app'));
+            this.render(this.html, document.getElementById('app'));
+            this.render(this.element, document.getElementById('app1'));
         });
+        
+        function waitForElement(selector, callback) {
+            const element = document.querySelector(selector);
+            if (element) {
+                callback(element);
+            } else {
+                setTimeout(() => waitForElement(selector, callback), 100);
+            }
+        }
+        
+        // Utilisation
+        waitForElement("#completetion", (dom) => {
+            this.eventListeners=dom
+            this.eventListener(dom, "click", ()=>{
+                alert("woo")
+            })
+            console.log("dom",this.eventListeners);
+        });
+        // this.on("click", ()=>{
+        //     alert('waoo')
+        // })
 
-        this.route('/active', () => {
-            this.render(
-                `<button onclick="app.navigate('/')">completed</button>`, 
-                document.getElementById('app')
-            );
-        });
+        // this.route('/active', () => {
+        //     this.renders(
+        //         `<button id="mybutton">completed</button>`, 
+        //         document.getElementById('app')
+        //     );
+        // });
 
         // Navigation initiale
         this.navigate('/');
     }
 
-    htmlToVirtualDOM(html) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        console.log(doc.body, "c'est doc")
-        return this.elementToObject(doc.body);
-    }
-
-    elementToObject(element) {
-        const obj = {
-            tag: element.tagName.toLowerCase(),
-            attrs: {},
-            children: []
-        };
-
-        // Ajout des attributs
-        for (let i = 0; i < element.attributes.length; i++) {
-            const attr = element.attributes[i];
-            obj.attrs[attr.name] = attr.value;
-        }
-
-        // Ajout des enfants
-        for (let i = 0; i < element.childNodes.length; i++) {
-            const child = element.childNodes[i];
-            if (child.nodeType === Node.TEXT_NODE && child.textContent.trim() !== '') {
-                // Traitement du contenu textuel
-                obj.children.push(child.textContent.trim());
-            } else if (child.nodeType === Node.ELEMENT_NODE) {
-                obj.children.push(this.elementToObject(child));
-            }
-        }
-
-        return obj;
-    }
+   
 }
 
 const todoApp = new TodoMvc();
