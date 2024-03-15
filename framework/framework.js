@@ -15,23 +15,27 @@ export default class MiniFramework {
       let html = `<${domObject.tag}`;
    
       // Ajout des attributs
-      if (domObject.attrs)
-      for (const attr in domObject.attrs) {
-          html += ` ${attr}="${domObject.attrs[attr]}"`;
+      if (domObject.attrs){
+         for (const attr in domObject.attrs) {
+            html += ` ${attr}="${domObject.attrs[attr]}"`;
+        }
+     
       }
-   
+     
       html += '>';
    
       // Ajout des enfants et du textContent
-      if ( domObject.children)
-      domObject.children.forEach(child => {
-          if (typeof child === 'string') {
-              // Traitement du contenu textuel
-              html += child;
-          } else {
-              html += this.createElement(child);
-          }
-      });
+      if ( domObject.children){
+         domObject.children.forEach(child => {
+            if (typeof child === 'string') {
+               // Traitement du contenu textuel
+               html += child;
+            } else {
+               html += this.createElement(child);
+            }
+         });
+      }
+         
    
       html += `</${domObject.tag}>`;
       

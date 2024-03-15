@@ -6,7 +6,7 @@ export default class TodoMvc extends MiniFramework {
         super();
               
 
-       
+    
         this.html = `
             <section class="todoapp" >
                 <header class="header" >
@@ -73,12 +73,23 @@ export default class TodoMvc extends MiniFramework {
         ]
       }
 
+      function getHashFromUrl() {
+        // Récupère le hash de l'URL actuelle
+        const hash = window.location.hash;
+    
+        // Supprime le caractère '#' au début du hash
+        const hashValue = hash.substring(1);
+        
+    
+        return hashValue;
+     }
+
 
       
-      
+       console.log("yes", getHashFromUrl()) 
        this.element=this.createElement(this.vmobject)
         // Définition des routes
-        console.log("this.routes", window.location.href)
+        console.log("this.routes", window.location.href)  
         this.route('/', () => {
             this.render(this.html, document.getElementById('app'));
             this.render(this.element, document.getElementById('app1'));
@@ -95,8 +106,9 @@ export default class TodoMvc extends MiniFramework {
         
         // Utilisation
         waitForElement("#completetion", (dom) => {
-            this.eventListeners=dom
-            this.eventListener(dom, "click", ()=>{
+            
+            this.eventListener(dom, "click", (event)=>{
+                console.log(event.currentTarget.getAttribute("href"), "une fois encore")
                 alert("woo")
             })
             console.log("dom",this.eventListeners);
@@ -121,17 +133,3 @@ export default class TodoMvc extends MiniFramework {
 
 const todoApp = new TodoMvc();
     
-
- // <div class="toggle-all-container">
-                    //     <input class="toggle-all" type="checkbox" data-testid="toggle-all">
-                    //     <label class="toggle-all-label" for="toggle-all">Toggle All Input</label>
-                    // </div>
-                    // <ul class="todo-list" data-testid="todo-list">
-                    //     <li class="" data-testid="todo-item">
-                    //         <div class="view">
-                    //             <input class="toggle" type="checkbox">
-                    //             <label> ee</label>
-                    //             <button class="destroy" data-testid="todo-item-button"></button>
-                    //         </div>
-                    //     </li>
-                    // </ul>
