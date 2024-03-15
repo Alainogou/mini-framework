@@ -29,11 +29,11 @@ export default class TodoMvc extends MiniFramework {
                     <button class="clear-completed" disabled="">Clear completed</button>
                 </footer>
             </section>
-        `;
+      `;
 
         
-        // this.virtualDOM = this.htmlToVirtualDOM(this.html);
-    this.vmobject={
+      // this.virtualDOM = this.htmlToVirtualDOM(this.html);
+      this.vmobject={
         "tag": "div",
         "attrs": {},
         "children": [
@@ -79,10 +79,8 @@ export default class TodoMvc extends MiniFramework {
     
         // Supprime le caractère '#' au début du hash
         const hashValue = hash.substring(1);
-        
-    
         return hashValue;
-     }
+      }
 
 
       
@@ -90,10 +88,10 @@ export default class TodoMvc extends MiniFramework {
        this.element=this.createElement(this.vmobject)
         // Définition des routes
         console.log("this.routes", window.location.href)  
-        this.route('/', () => {
-            this.render(this.html, document.getElementById('app'));
-            this.render(this.element, document.getElementById('app1'));
-        });
+        // this.route('/', () => {
+        //     this.render(this.html, document.getElementById('app'));
+        //     this.render(this.element, document.getElementById('app1'));
+        // });
         
         function waitForElement(selector, callback) {
             const element = document.querySelector(selector);
@@ -106,13 +104,14 @@ export default class TodoMvc extends MiniFramework {
         
         // Utilisation
         waitForElement("#completetion", (dom) => {
-            
             this.eventListener(dom, "click", (event)=>{
                 console.log(event.currentTarget.getAttribute("href"), "une fois encore")
                 alert("woo")
             })
             console.log("dom",this.eventListeners);
         });
+
+
         // this.on("click", ()=>{
         //     alert('waoo')
         // })
