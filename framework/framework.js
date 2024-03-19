@@ -79,12 +79,7 @@ export default class MiniFramework {
       // this.eventListeners[eventName].push(callback); 
     }
    
-    emit(eventName, data) {
-       const callbacks = this.eventListeners[eventName];
-       if (callbacks) {
-         callbacks.forEach(callback => callback(data));
-       }
-    }
+
 }
    
  

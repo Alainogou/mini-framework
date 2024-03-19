@@ -25,7 +25,7 @@ export default class TodoMvc extends MiniFramework {
         this.renderTodos(); 
     }
 
-    // Fonction pour filtrer les tâches en fonction du filtre actuel
+   
     filterTodos() {
         switch (this.currentFilter) {
             case 'active':
@@ -36,6 +36,8 @@ export default class TodoMvc extends MiniFramework {
                 return this.state; // 'all' ou tout autre cas, retourne toutes les tâches
         }
     }
+
+   
 
     renderTodos = () => {
         
@@ -48,7 +50,7 @@ export default class TodoMvc extends MiniFramework {
         const todoCountElement = document.querySelector('.todo-count');
         todoCountElement.textContent = `${activeCount} item${activeCount !== 1 ? 's' : ''} left!`;
         console.log(filtersTodos, "mes filters")
-        filtersTodos.forEach((todo, index) => {
+        filtersTodos.forEach((todo, index) => {index
             // Utilise this.createElement pour créer la structure HTML pour chaque todo
             const todoItem = this.createDomElement({
                 tag: 'li',
@@ -78,19 +80,28 @@ export default class TodoMvc extends MiniFramework {
                                 eventListeners: {
                                     change: (event) => {
                                         const checkbox = event.target;
-                                        console.log("yes")
+                                        
                                         const li = checkbox.closest('li');
                                         if (checkbox.checked) {
                                             
                                             li.classList.add('completed');
-                                            this.state[index].isCompleted = true;
-                                            this.renderTodos()
 
                                         } else {
                                             li.classList.remove('completed');
-                                            this.state[index].isCompleted = false;
-                                            this.renderTodos()
+                                            // this.state[index].isCompleted = false;
+                                            // this.renderTodos()
                                         }
+
+                                        const element = this.state.find(item => item.id === todo.id);
+
+                                        if (element) {
+                                           
+                                            element.isCompleted = !element.isCompleted;
+                                            
+                                        } else {
+                                            console.error(`Element with key ${todo.id} not found.`);
+                                        }
+                                        this.renderTodos()
                                     }
                                 } 
                             },
@@ -149,11 +160,15 @@ export default class TodoMvc extends MiniFramework {
         input.focus()
     }
 
- 
+    
+    generateUniqueKey() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+    }
+
     handleChange(event) {
         const task = event.target.value;
         if (task.trim() !== "" && task.trim().length !== 1) {
-            const id = this.idCounter++;
+            const id = this.generateUniqueKey();
             const todo = {
                 id: id,
                 isCompleted: false,
