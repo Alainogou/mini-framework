@@ -13,6 +13,7 @@ export default class TodoMvc extends MiniFramework {
 
         history.pushState("", document.title, window.location.pathname + window.location.search);
     }
+    
 
     handleNavigationClick(event) {
     
@@ -24,7 +25,7 @@ export default class TodoMvc extends MiniFramework {
         this.renderTodos(); 
     }
 
-    // Fonction pour filtrer les tâches en fonction du filtre actuel
+   
     filterTodos() {
         switch (this.currentFilter) {
             case 'active':
@@ -36,16 +37,19 @@ export default class TodoMvc extends MiniFramework {
         }
     }
 
+<<<<<<< HEAD
     // Dans votre classe TodoMvc, ajoutez une méthode pour obtenir le dernier élément de la liste filtrée
     getLastFilteredTodo() {
         const filteredTodos = this.filterTodos();
         return filteredTodos[filteredTodos.length - 1];
     }
+=======
+   
+>>>>>>> dfea5966aac20c5ff2f258cb9fb7b67d22fc5433
 
     renderTodos = () => {
         
         const todoList = document.querySelector('.todo-list');
-
         todoList.innerHTML = '';
 
         let filtersTodos=this.filterTodos()
@@ -54,7 +58,7 @@ export default class TodoMvc extends MiniFramework {
         const todoCountElement = document.querySelector('.todo-count');
         todoCountElement.textContent = `${activeCount} item${activeCount !== 1 ? 's' : ''} left!`;
         console.log(filtersTodos, "mes filters")
-        filtersTodos.forEach((todo, index) => {
+        filtersTodos.forEach((todo, index) => {index
             // Utilise this.createElement pour créer la structure HTML pour chaque todo
             const todoItem = this.createDomElement({
                 tag: 'li',
@@ -84,19 +88,28 @@ export default class TodoMvc extends MiniFramework {
                                 eventListeners: {
                                     change: (event) => {
                                         const checkbox = event.target;
-                                        console.log("yes")
+                                        
                                         const li = checkbox.closest('li');
                                         if (checkbox.checked) {
                                             
                                             li.classList.add('completed');
-                                            this.state[index].isCompleted = true;
-                                            this.renderTodos()
 
                                         } else {
                                             li.classList.remove('completed');
-                                            this.state[index].isCompleted = false;
-                                            this.renderTodos()
+                                            // this.state[index].isCompleted = false;
+                                            // this.renderTodos()
                                         }
+
+                                        const element = this.state.find(item => item.id === todo.id);
+
+                                        if (element) {
+                                           
+                                            element.isCompleted = !element.isCompleted;
+                                            
+                                        } else {
+                                            console.error(`Element with key ${todo.id} not found.`);
+                                        }
+                                        this.renderTodos()
                                     }
                                 } 
                             },
@@ -118,6 +131,7 @@ export default class TodoMvc extends MiniFramework {
                     }
                 ]
             });
+<<<<<<< HEAD
             
              // Utilisez la fonction eventListener pour ajouter l'écouteur d'événements au bouton destroy
              this.eventListener(todoItem.querySelector('.destroy'), 'click', () => {
@@ -128,6 +142,12 @@ export default class TodoMvc extends MiniFramework {
             });
 
             // Ajoute todoItem à todoList
+=======
+            todoItem.addEventListener('dblclick', () => {
+                this.editTodo(todo, index, todoItem);
+            });
+           
+>>>>>>> dfea5966aac20c5ff2f258cb9fb7b67d22fc5433
             todoList.appendChild(todoItem);
         });
          // Accéder au dernier élément de la liste filtrée
@@ -136,11 +156,45 @@ export default class TodoMvc extends MiniFramework {
          console.log("hello",lastFilteredTodo); 
      
     }
- 
+  
+    editTodo(todo, index, todoElement) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = todo.task;
+        input.className = 'edit'; 
+        input.style.display = 'block';
+        
+        this.eventListener(input, 'keydown', (event) => {
+            if (event.key === 'Enter') {
+                todo.task = input.value;
+                this.renderTodos(); 
+            }
+        });
+
+        this.eventListener(
+            document, 
+            'click', 
+            (event) => {
+                if (event.target !== input) {
+                    this.renderTodos();
+                }
+            }, 
+            { once: true } //l'option { once: true } pour supprimer l'écouteur après le premier clic
+        )
+        // Remplace l'élément de la liste par le champ de saisie
+        todoElement.replaceWith(input);
+        input.focus()
+    }
+
+    
+    generateUniqueKey() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+    }
+
     handleChange(event) {
         const task = event.target.value;
         if (task.trim() !== "" && task.trim().length !== 1) {
-            const id = this.idCounter++;
+            const id = this.generateUniqueKey();
             const todo = {
                 id: id,
                 isCompleted: false,
@@ -153,27 +207,34 @@ export default class TodoMvc extends MiniFramework {
         }
     }
 
+<<<<<<< HEAD
     // Méthode pour enregistrer l'état dans le stockage local
     saveState() {
         localStorage.setItem('todos', JSON.stringify(this.state));
+=======
+    handleClearCompleted(event) {
+        event.preventDefault(); 
+        this.state = this.state.filter(todo => !todo.isCompleted);
+        this.renderTodos();
+>>>>>>> dfea5966aac20c5ff2f258cb9fb7b67d22fc5433
     }
 
     load(){
         this.eventListener(this.inputElement, 'change', this.customBind(this.handleChange, this));
         this.eventListener( this.filterElement, 'click', this.customBind(this.handleNavigationClick, this));
-        // Sélectionnez le bouton "Toggle All Input"
+
+
         const toggleAllButton = document.querySelector('.toggle-all');
-    
-        // Ajoutez un écouteur d'événements au bouton "Toggle All Input"
-        toggleAllButton.addEventListener('change', (event) => {
-            // Basculez l'état de complétion de tous les éléments de la liste
+        this.eventListener(toggleAllButton, 'change', (event) => {
             this.state.forEach((todo, index) => {
                 todo.isCompleted = event.target.checked;
             });
-
-            // Re-rendre la liste pour refléter les changements
             this.renderTodos();
-        });
+        } )
+       
+        const clearCompletedButton = document.querySelector('.clear-completed');
+        this.eventListener(  clearCompletedButton, 'click', this.customBind(this.handleClearCompleted, this));
+
 
         // Ajoutez un écouteur d'événements global pour tous les boutons 'destroy'
         document.addEventListener('click', (event) => {
