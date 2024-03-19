@@ -10,12 +10,12 @@ export default class TodoMvc extends MiniFramework {
         this.idCounter=0
         this.currentFilter = 'all';
         this.filterElement=document.querySelector('.filters')
-       
 
         history.pushState("", document.title, window.location.pathname + window.location.search);
-
-        
     }
+    
+
+
     
 
     handleNavigationClick(event) {
@@ -27,7 +27,6 @@ export default class TodoMvc extends MiniFramework {
         event.target.classList.add('selected');
         this.renderTodos(); 
     }
-
 
     // Fonction pour filtrer les tâches en fonction du filtre actuel
     filterTodos() {
@@ -124,34 +123,7 @@ export default class TodoMvc extends MiniFramework {
         });
     }
   
-    editTodo(todo, index, todoElement) {
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.value = todo.task;
-        input.className = 'edit'; 
-        input.style.display = 'block';
-        
-        this.eventListener(input, 'keydown', (event) => {
-            if (event.key === 'Enter') {
-                todo.task = input.value;
-                this.renderTodos(); 
-            }
-        });
-
-        this.eventListener(
-            document, 
-            'click', 
-            (event) => {
-                if (event.target !== input) {
-                    this.renderTodos();
-                }
-            }, 
-            { once: true } //l'option { once: true } pour supprimer l'écouteur après le premier clic
-        )
-        // Remplace l'élément de la liste par le champ de saisie
-        todoElement.replaceWith(input);
-        input.focus()
-    }
+ 
 
     handleChange(event) {
         const task = event.target.value;
@@ -186,14 +158,7 @@ export default class TodoMvc extends MiniFramework {
                 todo.isCompleted = event.target.checked;
             });
             this.renderTodos();
-        } )
-       
-        const clearCompletedButton = document.querySelector('.clear-completed');
-        this.eventListener(  clearCompletedButton, 'click', this.customBind(this.handleClearCompleted, this));
-
-
-
-
+        });
     }
   
 }
