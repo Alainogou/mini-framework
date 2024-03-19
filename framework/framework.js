@@ -10,38 +10,36 @@ export default class MiniFramework {
        this.routes[path] = callback;
     }
 
-   // Ajustez la méthode createElement dans MiniFramework pour qu'elle prenne en charge les écouteurs d'événements
-creatDomElement(domObject) {
-   const element = document.createElement(domObject.tag);
-
-   // Ajout des attributs
-   if (domObject.attrs) {
-       for (const attr in domObject.attrs) {
-           element.setAttribute(attr, domObject.attrs[attr]);
-       }
-   }
-
-   // Ajout des écouteurs d'événements
-   if (domObject.eventListeners) {
-       for (const eventName in domObject.eventListeners) {
-           element.addEventListener(eventName, domObject.eventListeners[eventName]);
-       }
-   }
-
-   // Ajout des enfants et du textContent
-   if (domObject.children) {
-       domObject.children.forEach(child => {
-           if (typeof child === 'string') {
-               // Traitement du contenu textuel
-               element.textContent += child;
-           } else {
-               element.appendChild(this.creatDomElement(child));
-           }
-       });
-   }
-
-   return element;
-}
+    createDomElement = (domObject) => {
+        let element = document.createElement(domObject.tag);
+    
+        // Ajout des attributs
+        if (domObject.attrs) {
+            for (const attr in domObject.attrs) {
+                element.setAttribute(attr, domObject.attrs[attr]);
+            }
+        }
+    
+        // Ajout des écouteurs d'événements
+        if (domObject.eventListeners) {
+            for (const event in domObject.eventListeners) {
+                element.addEventListener(event, domObject.eventListeners[event]);
+            }
+        }
+    
+        // Ajout des enfants
+        if (domObject.children) {
+            domObject.children.forEach(child => {
+                if (typeof child === 'string') {
+                    element.textContent = child;
+                } else {
+                    element.appendChild(this.createDomElement(child));
+                }
+            });
+        }
+    
+        return element;
+    }   
 
    // Fonction de rappel pour l'événement 'change'
    customBind(fn, context) {
