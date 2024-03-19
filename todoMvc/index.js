@@ -10,16 +10,9 @@ export default class TodoMvc extends MiniFramework {
         this.idCounter=0
         this.currentFilter = 'all';
         this.filterElement=document.querySelector('.filters')
-       
 
         history.pushState("", document.title, window.location.pathname + window.location.search);
-
-        
     }
-    
-
-
-    
 
     handleNavigationClick(event) {
     
@@ -30,7 +23,6 @@ export default class TodoMvc extends MiniFramework {
         event.target.classList.add('selected');
         this.renderTodos(); 
     }
-
 
     // Fonction pour filtrer les tâches en fonction du filtre actuel
     filterTodos() {
@@ -114,6 +106,16 @@ export default class TodoMvc extends MiniFramework {
                                 attrs: {
                                     class: 'destroy',
                                     'data-testid': 'todo-item-button'
+                                },
+
+                                // Ajoutez un écouteur d'événements pour l'événement 'click'
+                                eventListeners: {
+                                    click: () => {
+                                        // Supprimez l'élément de la liste à l'index spécifié
+                                        this.state.splice(index, 1);
+                                        // Re-rendre la liste pour refléter les changements
+                                        this.renderTodos(); 
+                                    }
                                 }
                             }
                         ]
@@ -125,9 +127,7 @@ export default class TodoMvc extends MiniFramework {
             todoList.appendChild(todoItem);
         });
     }
-  
  
-
     handleChange(event) {
         const task = event.target.value;
         if (task.trim() !== "" && task.trim().length !== 1) {
@@ -163,7 +163,6 @@ export default class TodoMvc extends MiniFramework {
     }
   
 }
-
 
 const todoApp = new TodoMvc();
 todoApp.load()
