@@ -7,7 +7,7 @@ export default class TodoMvc extends MiniFramework {
         
         this.state = this.state || [];
         this.inputElement = document.querySelector('.new-todo');
-        this.idCounter=0
+        this.idCounter = 0
         this.currentFilter = 'all';
         this.filterElement=document.querySelector('.filters')
 
@@ -34,6 +34,12 @@ export default class TodoMvc extends MiniFramework {
             default:
                 return this.state; // 'all' ou tout autre cas, retourne toutes les tâches
         }
+    }
+
+    // Dans votre classe TodoMvc, ajoutez une méthode pour obtenir le dernier élément de la liste filtrée
+    getLastFilteredTodo() {
+        const filteredTodos = this.filterTodos();
+        return filteredTodos[filteredTodos.length - 1];
     }
 
     renderTodos = () => {
@@ -112,10 +118,23 @@ export default class TodoMvc extends MiniFramework {
                     }
                 ]
             });
+            
+             // Utilisez la fonction eventListener pour ajouter l'écouteur d'événements au bouton destroy
+             this.eventListener(todoItem.querySelector('.destroy'), 'click', () => {
+                // Supprimez l'élément de la liste
+                this.state.splice(index, 1); // Supprime l'élément à l'index spécifié
+                this.saveState(); // Enregistrez l'état dans le stockage local
+                this.renderTodos(); // Re-rendre la liste pour refléter les changements
+            });
 
             // Ajoute todoItem à todoList
             todoList.appendChild(todoItem);
         });
+         // Accéder au dernier élément de la liste filtrée
+         const lastFilteredTodo = this.getLastFilteredTodo();
+         // Affiche le dernier élément de la liste filtrée
+         console.log("hello",lastFilteredTodo); 
+     
     }
  
     handleChange(event) {
@@ -129,9 +148,14 @@ export default class TodoMvc extends MiniFramework {
             };
             this.state.push(todo);
             this.inputElement.value = '';
+            this.saveState();
             this.renderTodos()
-            
         }
+    }
+
+    // Méthode pour enregistrer l'état dans le stockage local
+    saveState() {
+        localStorage.setItem('todos', JSON.stringify(this.state));
     }
 
     load(){
