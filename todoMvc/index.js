@@ -125,7 +125,6 @@ export default class TodoMvc extends MiniFramework {
   
 }
 
+
 const todoApp = new TodoMvc();
 todoApp.load()
-
-
