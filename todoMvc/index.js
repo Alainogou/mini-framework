@@ -37,15 +37,12 @@ export default class TodoMvc extends MiniFramework {
         }
     }
 
-<<<<<<< HEAD
     // Dans votre classe TodoMvc, ajoutez une méthode pour obtenir le dernier élément de la liste filtrée
     getLastFilteredTodo() {
         const filteredTodos = this.filterTodos();
         return filteredTodos[filteredTodos.length - 1];
     }
-=======
    
->>>>>>> dfea5966aac20c5ff2f258cb9fb7b67d22fc5433
 
     renderTodos = () => {
         
@@ -131,23 +128,10 @@ export default class TodoMvc extends MiniFramework {
                     }
                 ]
             });
-<<<<<<< HEAD
-            
-             // Utilisez la fonction eventListener pour ajouter l'écouteur d'événements au bouton destroy
-             this.eventListener(todoItem.querySelector('.destroy'), 'click', () => {
-                // Supprimez l'élément de la liste
-                this.state.splice(index, 1); // Supprime l'élément à l'index spécifié
-                this.saveState(); // Enregistrez l'état dans le stockage local
-                this.renderTodos(); // Re-rendre la liste pour refléter les changements
-            });
-
-            // Ajoute todoItem à todoList
-=======
             todoItem.addEventListener('dblclick', () => {
                 this.editTodo(todo, index, todoItem);
             });
            
->>>>>>> dfea5966aac20c5ff2f258cb9fb7b67d22fc5433
             todoList.appendChild(todoItem);
         });
          // Accéder au dernier élément de la liste filtrée
@@ -202,21 +186,17 @@ export default class TodoMvc extends MiniFramework {
             };
             this.state.push(todo);
             this.inputElement.value = '';
-            this.saveState();
+            //this.saveState();
             this.renderTodos()
         }
     }
 
-<<<<<<< HEAD
     // Méthode pour enregistrer l'état dans le stockage local
-    saveState() {
-        localStorage.setItem('todos', JSON.stringify(this.state));
-=======
+    
     handleClearCompleted(event) {
         event.preventDefault(); 
         this.state = this.state.filter(todo => !todo.isCompleted);
         this.renderTodos();
->>>>>>> dfea5966aac20c5ff2f258cb9fb7b67d22fc5433
     }
 
     load(){
