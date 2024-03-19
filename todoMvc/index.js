@@ -106,16 +106,6 @@ export default class TodoMvc extends MiniFramework {
                                 attrs: {
                                     class: 'destroy',
                                     'data-testid': 'todo-item-button'
-                                },
-
-                                // Ajoutez un écouteur d'événements pour l'événement 'click'
-                                eventListeners: {
-                                    click: () => {
-                                        // Supprimez l'élément de la liste à l'index spécifié
-                                        this.state.splice(index, 1);
-                                        // Re-rendre la liste pour refléter les changements
-                                        this.renderTodos(); 
-                                    }
                                 }
                             }
                         ]
@@ -159,6 +149,18 @@ export default class TodoMvc extends MiniFramework {
 
             // Re-rendre la liste pour refléter les changements
             this.renderTodos();
+        });
+
+        // Ajoutez un écouteur d'événements global pour tous les boutons 'destroy'
+        document.addEventListener('click', (event) => {
+            if (event.target.classList.contains('destroy')) {
+                const todoItem = event.target.closest('li');
+                const index = Array.from(todoItem.parentNode.children).indexOf(todoItem);
+                // Supprime l'élément à l'index spécifié
+                this.state.splice(index, 1); 
+                // Re-rendre la liste pour refléter les changements
+                this.renderTodos(); 
+            }
         });
     }
   
