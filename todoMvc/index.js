@@ -18,9 +18,6 @@ export default class TodoMvc extends MiniFramework {
     }
     
 
-
-    
-
     handleNavigationClick(event) {
     
         const filter = event.target.getAttribute('href').replace('#/', ''); 
@@ -47,7 +44,6 @@ export default class TodoMvc extends MiniFramework {
     renderTodos = () => {
         
         const todoList = document.querySelector('.todo-list');
-
         todoList.innerHTML = '';
 
         let filtersTodos=this.filterTodos()
@@ -120,13 +116,42 @@ export default class TodoMvc extends MiniFramework {
                     }
                 ]
             });
-
-            // Ajoute todoItem à todoList
+            todoItem.addEventListener('dblclick', () => {
+                this.editTodo(todo, index, todoItem);
+            });
+           
             todoList.appendChild(todoItem);
         });
     }
   
- 
+    editTodo(todo, index, todoElement) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = todo.task;
+        input.className = 'edit'; 
+        input.style.display = 'block';
+        
+        this.eventListener(input, 'keydown', (event) => {
+            if (event.key === 'Enter') {
+                todo.task = input.value;
+                this.renderTodos(); 
+            }
+        });
+
+        this.eventListener(
+            document, 
+            'click', 
+            (event) => {
+                if (event.target !== input) {
+                    this.renderTodos();
+                }
+            }, 
+            { once: true } //l'option { once: true } pour supprimer l'écouteur après le premier clic
+        )
+        // Remplace l'élément de la liste par le champ de saisie
+        todoElement.replaceWith(input);
+        input.focus()
+    }
 
     handleChange(event) {
         const task = event.target.value;
@@ -144,22 +169,31 @@ export default class TodoMvc extends MiniFramework {
         }
     }
 
+    handleClearCompleted(event) {
+        event.preventDefault(); 
+        this.state = this.state.filter(todo => !todo.isCompleted);
+        this.renderTodos();
+    }
+
     load(){
         this.eventListener(this.inputElement, 'change', this.customBind(this.handleChange, this));
         this.eventListener( this.filterElement, 'click', this.customBind(this.handleNavigationClick, this));
-        // Sélectionnez le bouton "Toggle All Input"
+
+
         const toggleAllButton = document.querySelector('.toggle-all');
-    
-        // Ajoutez un écouteur d'événements au bouton "Toggle All Input"
-        toggleAllButton.addEventListener('change', (event) => {
-            // Basculez l'état de complétion de tous les éléments de la liste
+        this.eventListener(toggleAllButton, 'change', (event) => {
             this.state.forEach((todo, index) => {
                 todo.isCompleted = event.target.checked;
             });
-
-            // Re-rendre la liste pour refléter les changements
             this.renderTodos();
-        });
+        } )
+       
+        const clearCompletedButton = document.querySelector('.clear-completed');
+        this.eventListener(  clearCompletedButton, 'click', this.customBind(this.handleClearCompleted, this));
+
+
+
+
     }
   
 }

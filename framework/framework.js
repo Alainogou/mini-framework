@@ -71,9 +71,9 @@ export default class MiniFramework {
     }
    
     // Gestion des événements
-    eventListener(element, eventName,  callback) {
+    eventListener(element, eventName,  callback, options) {
        if (element && eventName) {
-         element.addEventListener(eventName, callback )
+         element.addEventListener(eventName, callback,options )
          
        }
       // this.eventListeners[eventName].push(callback); 
