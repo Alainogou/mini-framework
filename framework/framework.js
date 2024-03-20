@@ -1,6 +1,6 @@
 export default class MiniFramework {
     constructor() {
-       this.routes = {};
+       this.routes ='';
        this.state = [];
        this.eventListeners = {};
     }
@@ -9,6 +9,26 @@ export default class MiniFramework {
     route(path, callback) {
        this.routes[path] = callback;
     }
+
+
+    navigate(newRoute, renderCallback) {
+        if (typeof history !== 'undefined') {
+          this.route = newRoute;
+          renderCallback();
+        } else {
+          console.error('History API is not supported.');
+        }
+    }
+
+    retrieveHashFromUrl() {
+        
+        const hash = window.location.hash;
+
+        const cleanHash = hash.substring(1);
+
+        this.routes=cleanHash
+    }
+
 
     createDomElement = (domObject) => {
         let element = document.createElement(domObject.tag);
@@ -41,24 +61,19 @@ export default class MiniFramework {
         return element;
     }   
 
-   // Fonction de rappel pour l'événement 'change'
-   customBind(fn, context) {
-      return function(...args) {
-          return fn.apply(context, args);
-      };
-    }
+    // Fonction de rappel pour l'événement 'change'
+    customBind(fn, context) {
+        return function(...args) {
+            return fn.apply(context, args);
+        };
+        }
    
     // Fonction de rendu simple
    render(component, container) {
       container.appendChild(component)
    }
 
-    navigate(path) {
-       const callback = this.routes[path];
-       if (callback) {
-         callback();
-       }
-    }
+    
    
     // Gestion de l'état
     setState(key, value) {

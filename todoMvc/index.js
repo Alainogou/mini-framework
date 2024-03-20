@@ -9,10 +9,11 @@ export default class TodoMvc extends MiniFramework {
         this.idCounter = 0
         this.currentFilter = 'all';
         this.filterElement=document.querySelector('.filters')
+        this.footerMenu=document.querySelector('.footer');
 
         // Cachez le menu du footer au démarrage
-        const footerMenu = document.querySelector('.footer');
-        footerMenu.classList.add('hidden');
+       
+        this.footerMenu.classList.add('hidden');
 
         const toggle = document.querySelector('.toggle-all-container');
         toggle.classList.add('hidden');
@@ -21,18 +22,11 @@ export default class TodoMvc extends MiniFramework {
     }
     
 
-    handleNavigationClick(event) {
-        const filter = event.target.getAttribute('href').replace('#/', ''); 
-        this.currentFilter = filter;
-        const navigationLinks = document.querySelectorAll('.filters a');
-        navigationLinks.forEach(link => link.classList.remove('selected'));
-        event.target.classList.add('selected');
-        this.renderTodos(); 
-    }
+   
 
    
     filterTodos() {
-        switch (this.currentFilter) {
+        switch (this.route) {
             case 'active':
                 return this.state.filter(todo => !todo.isCompleted);
             case 'completed':
@@ -54,7 +48,7 @@ export default class TodoMvc extends MiniFramework {
         const activeCount = this.state.filter(todo => !todo.isCompleted).length;
         const todoCountElement = document.querySelector('.todo-count');
         todoCountElement.textContent = `${activeCount} item${activeCount !== 1 ? 's' : ''} left!`;
-        console.log(filtersTodos, "mes filters")
+        
 
         // Affichez le menu du footer si la liste n'est pas vide
         const toggle = document.querySelector('.toggle-all-container');
@@ -77,10 +71,18 @@ export default class TodoMvc extends MiniFramework {
         if (completedTodos.length === 0) {
             // Si la liste est vide, ajouter la classe 'hidden' pour cacher le bouton
             clearCompletedButton.classList.add('hidden');
+           
         } else {
             // Si la liste n'est pas vide, supprimer la classe 'hidden' pour afficher le bouton
             clearCompletedButton.classList.remove('hidden');
         }
+        
+        
+        if (this.state.length===0){
+            this.footerMenu.classList.add('hidden');
+        }
+
+
 
         filtersTodos.forEach((todo, index) => {index
             // Utilise this.createElement pour créer la structure HTML pour chaque todo
@@ -163,9 +165,10 @@ export default class TodoMvc extends MiniFramework {
                 this.renderTodos(); // Re-rendre la liste pour refléter les changements
             });
 
-            todoItem.addEventListener('dblclick', () => {
+            this.eventListener(todoItem, 'dblclick', () => {
                 this.editTodo(todo, index, todoItem);
             });
+           
            
             todoList.appendChild(todoItem);
         });
@@ -197,7 +200,7 @@ export default class TodoMvc extends MiniFramework {
             }, 
             { once: true } //l'option { once: true } pour supprimer l'écouteur après le premier clic
         )
-        // Remplace l'élément de la liste par le champ de saisie
+        // Remplacegit config pull.rebase false l'élément de la liste par le champ de saisie
         todoElement.replaceWith(input);
         input.focus()
     }
@@ -227,12 +230,25 @@ export default class TodoMvc extends MiniFramework {
     handleClearCompleted(event) {
         event.preventDefault(); 
         this.state = this.state.filter(todo => !todo.isCompleted);
+       
         this.renderTodos();
     }
 
     load(){
         this.eventListener(this.inputElement, 'change', this.customBind(this.handleChange, this));
-        this.eventListener( this.filterElement, 'click', this.customBind(this.handleNavigationClick, this));
+
+        this.eventListener( this.filterElement, 'click', (event)=>{
+            
+            const currentRoutes = event.target.getAttribute('href').replace('#/', ''); 
+            
+            this.navigate(currentRoutes, ()=>{
+                const navigationLinks = document.querySelectorAll('.filters a');
+                navigationLinks.forEach(link => link.classList.remove('selected'));
+                event.target.classList.add('selected');
+                this.renderTodos(); 
+            })
+        });
+
 
 
         const toggleAllButton = document.querySelector('.toggle-all');
@@ -254,3 +270,4 @@ export default class TodoMvc extends MiniFramework {
 
 const todoApp = new TodoMvc();
 todoApp.load()
+
