@@ -22,7 +22,6 @@ export default class TodoMvc extends MiniFramework {
     
 
     handleNavigationClick(event) {
-    
         const filter = event.target.getAttribute('href').replace('#/', ''); 
         this.currentFilter = filter;
         const navigationLinks = document.querySelectorAll('.filters a');
@@ -43,11 +42,6 @@ export default class TodoMvc extends MiniFramework {
         }
     }
 
-    // Dans votre classe TodoMvc, ajoutez une méthode pour obtenir le dernier élément de la liste filtrée
-    getLastFilteredTodo() {
-        const filteredTodos = this.filterTodos();
-        return filteredTodos[filteredTodos.length - 1];
-    }
    
 
     renderTodos = () => {
@@ -163,10 +157,7 @@ export default class TodoMvc extends MiniFramework {
            
             todoList.appendChild(todoItem);
         });
-         // Accéder au dernier élément de la liste filtrée
-         const lastFilteredTodo = this.getLastFilteredTodo();
-         // Affiche le dernier élément de la liste filtrée
-         console.log("hello",lastFilteredTodo); 
+        
      
     }
   
@@ -215,7 +206,6 @@ export default class TodoMvc extends MiniFramework {
             };
             this.state.push(todo);
             this.inputElement.value = '';
-            //this.saveState();
             this.renderTodos()
         }
     }
@@ -245,17 +235,7 @@ export default class TodoMvc extends MiniFramework {
         this.eventListener(  clearCompletedButton, 'click', this.customBind(this.handleClearCompleted, this));
 
 
-        // Ajoutez un écouteur d'événements global pour tous les boutons 'destroy'
-        // document.addEventListener('click', (event) => {
-        //     if (event.target.classList.contains('destroy')) {
-        //         const todoItem = event.target.closest('li');
-        //         const index = Array.from(todoItem.parentNode.children).indexOf(todoItem);
-        //         // Supprime l'élément à l'index spécifié
-        //         this.state.splice(index, 1); 
-        //         // Re-rendre la liste pour refléter les changements
-        //         this.renderTodos(); 
-        //     }
-        // });
+      
     }
   
 }
