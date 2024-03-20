@@ -1,6 +1,5 @@
 import MiniFramework from "../framework/framework.js";
 
-
 export default class TodoMvc extends MiniFramework {
     constructor() {
         super();
@@ -10,6 +9,13 @@ export default class TodoMvc extends MiniFramework {
         this.idCounter = 0
         this.currentFilter = 'all';
         this.filterElement=document.querySelector('.filters')
+
+        // Cachez le menu du footer au démarrage
+        const footerMenu = document.querySelector('.footer');
+        footerMenu.classList.add('hidden');
+
+        const toggle = document.querySelector('.toggle-all-container');
+        toggle.classList.add('hidden');
 
         history.pushState("", document.title, window.location.pathname + window.location.search);
     }
@@ -55,6 +61,16 @@ export default class TodoMvc extends MiniFramework {
         const todoCountElement = document.querySelector('.todo-count');
         todoCountElement.textContent = `${activeCount} item${activeCount !== 1 ? 's' : ''} left!`;
         console.log(filtersTodos, "mes filters")
+
+        // Affichez le menu du footer si la liste n'est pas vide
+        const toggle = document.querySelector('.toggle-all-container');
+
+        const footerMenu = document.querySelector('.footer');
+        if (filtersTodos.length > 0) {
+            footerMenu.classList.remove('hidden');
+            toggle.classList.remove('hidden');
+        }
+
         filtersTodos.forEach((todo, index) => {index
             // Utilise this.createElement pour créer la structure HTML pour chaque todo
             const todoItem = this.createDomElement({
@@ -128,6 +144,14 @@ export default class TodoMvc extends MiniFramework {
                     }
                 ]
             });
+
+            // Utilisez la fonction eventListener pour ajouter l'écouteur d'événements au bouton destroy
+            this.eventListener(todoItem.querySelector('.destroy'), 'click', () => {
+                // Supprimez l'élément de la liste
+                this.state.splice(index, 1); // Supprime l'élément à l'index spécifié
+                this.renderTodos(); // Re-rendre la liste pour refléter les changements
+            });
+
             todoItem.addEventListener('dblclick', () => {
                 this.editTodo(todo, index, todoItem);
             });
@@ -217,16 +241,16 @@ export default class TodoMvc extends MiniFramework {
 
 
         // Ajoutez un écouteur d'événements global pour tous les boutons 'destroy'
-        document.addEventListener('click', (event) => {
-            if (event.target.classList.contains('destroy')) {
-                const todoItem = event.target.closest('li');
-                const index = Array.from(todoItem.parentNode.children).indexOf(todoItem);
-                // Supprime l'élément à l'index spécifié
-                this.state.splice(index, 1); 
-                // Re-rendre la liste pour refléter les changements
-                this.renderTodos(); 
-            }
-        });
+        // document.addEventListener('click', (event) => {
+        //     if (event.target.classList.contains('destroy')) {
+        //         const todoItem = event.target.closest('li');
+        //         const index = Array.from(todoItem.parentNode.children).indexOf(todoItem);
+        //         // Supprime l'élément à l'index spécifié
+        //         this.state.splice(index, 1); 
+        //         // Re-rendre la liste pour refléter les changements
+        //         this.renderTodos(); 
+        //     }
+        // });
     }
   
 }

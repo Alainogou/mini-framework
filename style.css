@@ -389,4 +389,8 @@ body {
     outline: 0
 }
 
+.hidden {
+    display: none;
+}
+
 /*# sourceMappingURL=app.css.map*/
