@@ -64,6 +64,11 @@ export default class TodoMvc extends MiniFramework {
 
         // Affichez le menu du footer si la liste n'est pas vide
         const toggle = document.querySelector('.toggle-all-container');
+        if (filtersTodos.length === 0) {
+            toggle.classList.add('hidden');
+        } else {
+            toggle.classList.remove('hidden');
+        }
 
         const footerMenu = document.querySelector('.footer');
         if (filtersTodos.length > 0) {
