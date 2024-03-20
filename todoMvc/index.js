@@ -70,6 +70,18 @@ export default class TodoMvc extends MiniFramework {
             toggle.classList.remove('hidden');
         }
 
+        const clearCompletedButton = document.querySelector('.clear-completed');
+        // Filtrer les tâches complétées
+        const completedTodos = this.state.filter(todo => todo.isCompleted);
+        // Vérifier si la liste des tâches complétées est vide
+        if (completedTodos.length === 0) {
+            // Si la liste est vide, ajouter la classe 'hidden' pour cacher le bouton
+            clearCompletedButton.classList.add('hidden');
+        } else {
+            // Si la liste n'est pas vide, supprimer la classe 'hidden' pour afficher le bouton
+            clearCompletedButton.classList.remove('hidden');
+        }
+
         filtersTodos.forEach((todo, index) => {index
             // Utilise this.createElement pour créer la structure HTML pour chaque todo
             const todoItem = this.createDomElement({
