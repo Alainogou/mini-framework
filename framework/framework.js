@@ -5,21 +5,17 @@ export default class MiniFramework {
        this.eventListeners = {};
     }
    
+
     // Abstraction du système de routage DOM
-    route(path, callback) {
-       this.routes[path] = callback;
-    }
-
-
-    navigate(newRoute, renderCallback) {
+    navigate(newRoute, Callback) {
         if (typeof history !== 'undefined') {
           this.route = newRoute;
-          renderCallback();
+          Callback();
         } else {
           console.error('History API is not supported.');
         }
     }
-
+a
     retrieveHashFromUrl() {
         
         const hash = window.location.hash;
@@ -61,40 +57,20 @@ export default class MiniFramework {
         return element;
     }   
 
-    // Fonction de rappel pour l'événement 'change'
     customBind(fn, context) {
         return function(...args) {
             return fn.apply(context, args);
         };
-        }
+    }
    
-    // Fonction de rendu simple
-   render(component, container) {
-      container.appendChild(component)
-   }
 
-    
-   
-    // Gestion de l'état
-    setState(key, value) {
-       this.state[key] = value;
-       this.emit('stateChanged', { key, value });
-    }
-   
-    getState(key) {
-       return this.state[key];
-    }
-   
-    // Gestion des événements
     eventListener(element, eventName,  callback, options) {
        if (element && eventName) {
          element.addEventListener(eventName, callback,options )
          
        }
-      // this.eventListeners[eventName].push(callback); 
     }
    
 
 }
    
- 

@@ -1,4 +1,8 @@
 import MiniFramework from "../framework/framework.js";
+import handleCreateTask from "./createTask.js";
+import renderTodos from "./renderTodo.js";
+
+
 
 export default class TodoMvc extends MiniFramework {
     constructor() {
@@ -11,7 +15,6 @@ export default class TodoMvc extends MiniFramework {
         this.filterElement=document.querySelector('.filters')
         this.footerMenu=document.querySelector('.footer');
 
-        // Cachez le menu du footer au démarrage
        
         this.footerMenu.classList.add('hidden');
 
@@ -22,9 +25,6 @@ export default class TodoMvc extends MiniFramework {
     }
     
 
-   
-
-   
     filterTodos() {
         switch (this.route) {
             case 'active':
@@ -35,207 +35,20 @@ export default class TodoMvc extends MiniFramework {
                 return this.state; // 'all' ou tout autre cas, retourne toutes les tâches
         }
     }
-
    
-
-    renderTodos = () => {
-        
-        const todoList = document.querySelector('.todo-list');
-        todoList.innerHTML = '';
-
-        let filtersTodos=this.filterTodos()
     
-        const activeCount = this.state.filter(todo => !todo.isCompleted).length;
-        const todoCountElement = document.querySelector('.todo-count');
-        todoCountElement.textContent = `${activeCount} item${activeCount !== 1 ? 's' : ''} left!`;
-        
 
-        // Affichez le menu du footer si la liste n'est pas vide
-        const toggle = document.querySelector('.toggle-all-container');
-        if (filtersTodos.length === 0) {
-            toggle.classList.add('hidden');
-        } else {
-            toggle.classList.remove('hidden');
-        }
-
-        const footerMenu = document.querySelector('.footer');
-        if (filtersTodos.length > 0) {
-            footerMenu.classList.remove('hidden');
-            toggle.classList.remove('hidden');
-        }
-
-        const clearCompletedButton = document.querySelector('.clear-completed');
-        // Filtrer les tâches complétées
-        const completedTodos = this.state.filter(todo => todo.isCompleted);
-        // Vérifier si la liste des tâches complétées est vide
-        if (completedTodos.length === 0) {
-            // Si la liste est vide, ajouter la classe 'hidden' pour cacher le bouton
-            clearCompletedButton.classList.add('hidden');
-           
-        } else {
-            // Si la liste n'est pas vide, supprimer la classe 'hidden' pour afficher le bouton
-            clearCompletedButton.classList.remove('hidden');
-        }
-        
-        
-        if (this.state.length===0){
-            this.footerMenu.classList.add('hidden');
-        }
-
-
-
-        filtersTodos.forEach((todo, index) => {index
-            // Utilise this.createElement pour créer la structure HTML pour chaque todo
-            const todoItem = this.createDomElement({
-                tag: 'li',
-                attrs: {
-                    'data-testid': 'todo-item',
-                    class: todo.isCompleted ? 'completed' : ''
-                },
-                children: [
-                    {
-                        tag: 'div',
-                        attrs: {
-                            class: 'view'
-                        },
-                        children: [     
-                            {
-                                tag: 'input',
-                                attrs: {
-                                    class: 'toggle',
-                                    type: 'checkbox',
-                                    id: `item_${todo.id}`,
-                                    'data-testid': 'todo-item-toggle',
-                                    ...(todo.isCompleted ? { checked: true } : {})
-
-                                },
-                            
-                                // Ajoute un écouteur d'événements pour l'événement 'change'
-                                eventListeners: {
-                                    change: (event) => {
-                                        const checkbox = event.target;
-                                        
-                                        const li = checkbox.closest('li');
-                                        if (checkbox.checked) {
-                                            
-                                            li.classList.add('completed');
-
-                                        } else {
-                                            li.classList.remove('completed');
-                                            // this.state[index].isCompleted = false;
-                                            // this.renderTodos()
-                                        }
-
-                                        const element = this.state.find(item => item.id === todo.id);
-
-                                        if (element) {
-                                           
-                                            element.isCompleted = !element.isCompleted;
-                                            
-                                        } else {
-                                            console.error(`Element with key ${todo.id} not found.`);
-                                        }
-                                        this.renderTodos()
-                                    }
-                                } 
-                            },
-                            {
-                                tag: 'label',
-                                attrs: {
-                                    'data-testid': 'todo-item-label'
-                                },
-                                children: [todo.task] // Utilise la propriété task du todo comme texte de la label
-                            },
-                            {
-                                tag: 'button',
-                                attrs: {
-                                    class: 'destroy',
-                                    'data-testid': 'todo-item-button'
-                                }
-                            }
-                        ]
-                    }
-                ]
-            });
-
-            // Utilisez la fonction eventListener pour ajouter l'écouteur d'événements au bouton destroy
-            this.eventListener(todoItem.querySelector('.destroy'), 'click', () => {
-                // Supprimez l'élément de la liste
-                this.state.splice(index, 1); // Supprime l'élément à l'index spécifié
-                this.renderTodos(); // Re-rendre la liste pour refléter les changements
-            });
-
-            this.eventListener(todoItem, 'dblclick', () => {
-                this.editTodo(todo, index, todoItem);
-            });
-           
-           
-            todoList.appendChild(todoItem);
-        });
-        
-     
-    }
-  
-    editTodo(todo, index, todoElement) {
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.value = todo.task;
-        input.className = 'edit'; 
-        input.style.display = 'block';
-        
-        this.eventListener(input, 'keydown', (event) => {
-            if (event.key === 'Enter') {
-                todo.task = input.value;
-                this.renderTodos(); 
-            }
-        });
-
-        this.eventListener(
-            document, 
-            'click', 
-            (event) => {
-                if (event.target !== input) {
-                    this.renderTodos();
-                }
-            }, 
-            { once: true } //l'option { once: true } pour supprimer l'écouteur après le premier clic
-        )
-        // Remplacegit config pull.rebase false l'élément de la liste par le champ de saisie
-        todoElement.replaceWith(input);
-        input.focus()
-    }
-
-    
-    generateUniqueKey() {
-        return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
-    }
-
-    handleChange(event) {
-        const task = event.target.value;
-        if (task.trim() !== "" && task.trim().length !== 1) {
-            const id = this.generateUniqueKey();
-            const todo = {
-                id: id,
-                isCompleted: false,
-                task: task,
-            };
-            this.state.push(todo);
-            this.inputElement.value = '';
-            this.renderTodos()
-        }
-    }
 
     // Méthode pour enregistrer l'état dans le stockage local
     
     handleClearCompleted(event) {
         event.preventDefault(); 
         this.state = this.state.filter(todo => !todo.isCompleted);
-       
-        this.renderTodos();
+        renderTodos.call(this);;
     }
 
     load(){
-        this.eventListener(this.inputElement, 'change', this.customBind(this.handleChange, this));
+        this.eventListener(this.inputElement, 'change', (event) =>this.customBind(handleCreateTask.call(this, event), this));
 
         this.eventListener( this.filterElement, 'click', (event)=>{
             
@@ -245,7 +58,7 @@ export default class TodoMvc extends MiniFramework {
                 const navigationLinks = document.querySelectorAll('.filters a');
                 navigationLinks.forEach(link => link.classList.remove('selected'));
                 event.target.classList.add('selected');
-                this.renderTodos(); 
+                renderTodos.call(this);; 
             })
         });
 
@@ -256,7 +69,7 @@ export default class TodoMvc extends MiniFramework {
             this.state.forEach((todo, index) => {
                 todo.isCompleted = event.target.checked;
             });
-            this.renderTodos();
+             renderTodos.call(this);;
         } )
        
         const clearCompletedButton = document.querySelector('.clear-completed');
