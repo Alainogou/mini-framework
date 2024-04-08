@@ -11,30 +11,29 @@ MiniFramework is a lightweight JavaScript framework designed to simplify the pro
 - **state Management**: Add attributes to elements in a straightforward manner.
 - **Routing**: Simplify the process of managing routes in your application.
 
-
-
 ## Creating an Element
 
 To create a DOM element, you can use the `createDomElement` method. This method takes an object that describes the element you want to create, including its tag name, attributes, event listeners, and children.
 
 ```javascript
-const miniFramework = new MiniFramework();
+import MiniFramework from "../framework/framework.js";
 
-const divElement = miniFramework.createDomElement({
- tag: 'div',
- attrs: {
-    class: 'my-class',
-    id: 'my-id'
- },
- children: ['Hello, World!']
+// create a class that inherent from MiniFramework
+export class App extends MiniFramework {}
+
+const divElement = App.createDomElement({
+  tag: "div",
+  attrs: {
+    class: "my-class",
+    id: "my-id",
+  },
+  children: ["Hello, World!"],
 });
 
 document.body.appendChild(divElement);
 ```
 
 In this example, a `div` element is created with the class `my-class` and the id `my-id`. The text content of the `div` is set to "Hello, World!".
-
-
 
 ### Nesting Elements
 
@@ -44,17 +43,17 @@ To nest elements, you can include them in the `children` array of the parent ele
 const miniFramework = new MiniFramework();
 
 const nestedElement = miniFramework.createDomElement({
- tag: 'div',
- children: [
+  tag: "div",
+  children: [
     {
-      tag: 'p',
-      children: ['This is a paragraph.']
+      tag: "p",
+      children: ["This is a paragraph."],
     },
     {
-      tag: 'button',
-      children: ['Click me']
-    }
- ]
+      tag: "button",
+      children: ["Click me"],
+    },
+  ],
 });
 
 document.body.appendChild(nestedElement);
@@ -70,11 +69,11 @@ To add attributes to an element, you can include them in the `attrs` object of t
 const miniFramework = new MiniFramework();
 
 const inputElement = miniFramework.createDomElement({
- tag: 'input',
- attrs: {
-    type: 'text',
-    placeholder: 'Enter your name'
- }
+  tag: "input",
+  attrs: {
+    type: "text",
+    placeholder: "Enter your name",
+  },
 });
 
 document.body.appendChild(inputElement);
@@ -90,19 +89,18 @@ To add an event listener to an element, you can use the `eventListener` method. 
 const miniFramework = new MiniFramework();
 
 const buttonElement = miniFramework.createDomElement({
- tag: 'button',
- children: ['Click me']
+  tag: "button",
+  children: ["Click me"],
 });
 
-miniFramework.eventListener(buttonElement, 'click', () => {
- console.log('Button clicked!');
+miniFramework.eventListener(buttonElement, "click", () => {
+  console.log("Button clicked!");
 });
 
 document.body.appendChild(buttonElement);
 ```
 
 In this example, a `click` event listener is added to a `button` element. When the button is clicked, "Button clicked!" is logged to the console.
-
 
 ## Routing
 
@@ -111,8 +109,8 @@ MiniFramework provides a simple API for managing routes in your application. You
 ```javascript
 const miniFramework = new MiniFramework();
 
-miniFramework.navigate('/new-route', () => {
- console.log('Navigated to new route');
+miniFramework.navigate("/new-route", () => {
+  console.log("Navigated to new route");
 });
 ```
 
@@ -135,20 +133,24 @@ const miniFramework = new MiniFramework();
 
 // Define an object with a method
 const myObject = {
- name: 'Alice',
- greet: function() {
+  name: "Alice",
+  greet: function () {
     console.log(`Hello, ${this.name}!`);
- }
+  },
 };
 
 // Create a button element
 const button = miniFramework.createDomElement({
- tag: 'button',
- children: ['Click me']
+  tag: "button",
+  children: ["Click me"],
 });
 
 // Bind the greet method of myObject to the button's click event
-miniFramework.eventListener(button, 'click', miniFramework.customBind(myObject.greet, myObject));
+miniFramework.eventListener(
+  button,
+  "click",
+  miniFramework.customBind(myObject.greet, myObject)
+);
 
 // Append the button to the document body
 document.body.appendChild(button);
